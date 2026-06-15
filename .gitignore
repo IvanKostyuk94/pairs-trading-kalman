@@ -1,0 +1,29 @@
+# Python bytecode — Python compiles .py files to .pyc for speed.
+# You never need to commit these; they're regenerated automatically.
+__pycache__/
+*.py[cod]
+
+# Build artifacts — created when you package the library for distribution.
+# Not relevant now but you'll see these appear if you run `uv build`.
+*.egg-info/
+dist/
+build/
+
+# The virtual environment — this is where uv installs your dependencies.
+# It's local to your machine; anyone else recreates it with `uv sync`.
+.venv/
+
+# Data files — raw price data can be gigabytes and changes constantly.
+# Document how to reproduce it in the README instead.
+data/raw/
+data/processed/
+*.csv
+*.parquet
+
+# Jupyter checkpoint folders — created automatically when you save a notebook.
+.ipynb_checkpoints/
+# Environment variables — API keys, secrets. Never commit these.
+.env
+# macOS metadata files
+.DS_Store
+
