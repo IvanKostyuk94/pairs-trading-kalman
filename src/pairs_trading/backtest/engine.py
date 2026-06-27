@@ -29,16 +29,16 @@ class BacktestEngine:
         y_returns = (y - y.shift(1)) / y.shift(1)
 
         pnl = pd.Series(0.0, index=y.index)
-        for i in range(len(y_returns)):
-            if signals.iloc[i] == 1:
+        for i in range(1, len(y_returns)):
+            if signals.iloc[i - 1] == 1:
                 pnl.iloc[i] = notional * (
                     y_returns.iloc[i]
-                    - hedge_ratios.iloc[i] * x_returns.iloc[i]
+                    - hedge_ratios.iloc[i - 1] * x_returns.iloc[i]
                 )
-            if signals.iloc[i] == -1:
+            if signals.iloc[i - 1] == -1:
                 pnl.iloc[i] = notional * (
                     -y_returns.iloc[i]
-                    + hedge_ratios.iloc[i] * x_returns.iloc[i]
+                    + hedge_ratios.iloc[i - 1] * x_returns.iloc[i]
                 )
         return pnl
 
@@ -49,7 +49,7 @@ class BacktestEngine:
         notional: float,
         cost: float,
     ) -> pd.Series:
-        trades = (signals != signals.shift(1)).astype(float)
+        trades = (signals != signals.shift(1)).fillna(False).astype(float)
         mult = cost / 10000
         return notional * trades * mult * (1 + hedge_ratios)
 
