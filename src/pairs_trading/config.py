@@ -1,19 +1,24 @@
 from dataclasses import dataclass
+import numpy as np
 
 
 @dataclass(frozen=True)
 class DataConfig:
     tickers: tuple[str, ...] = ("GLD", "SLV")
-    start: str = "2020-01-01"
-    end: str = "2024-12-31"
+    start: str = "2017-01-01"
+    end: str = "2025-12-31"
 
 
 @dataclass(frozen=True)
 class SplitConfig:
-    train_start: str = "2020-01-01"
-    train_end: str = "2023-01-01"
-    test_start: str = "2023-01-02"
-    test_end: str = "2024-12-31"
+    coint_start: str = "2019-09-01"
+    coint_end: str = "2019-12-31"
+    train_start: str = "2017-01-01"
+    train_end: str = "2019-12-31"
+    val_start: str = "2020-01-01"
+    val_end: str = "2022-12-31"
+    test_start: str = "2022-01-01"
+    test_end: str = "2025-12-31"
 
 
 @dataclass(frozen=True)
@@ -27,6 +32,7 @@ class SignalConfig:
     entry_z: float = 2.0
     exit_z: float = 0.5
     stop_z: float = 3.5
+    max_holding: int = 30
 
 
 @dataclass(frozen=True)
@@ -36,8 +42,14 @@ class CostConfig:
 
 @dataclass(frozen=True)
 class KalmanConfig:
-    delta: float = 1e-4
-    obs_noise: float = 1e-3
+    delta: float = 7e-7
+
+
+@dataclass(frozen=True)
+class GARCHConfig:
+    p: int = 1
+    q: int = 1
+    target_vol: float = 0.01
 
 
 DATA = DataConfig()
@@ -46,3 +58,4 @@ COINT = CointConfig()
 SIGNAL = SignalConfig()
 COST = CostConfig()
 KALMAN = KalmanConfig()
+GARCH = GARCHConfig()

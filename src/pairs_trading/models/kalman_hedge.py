@@ -1,15 +1,12 @@
 import pandas as pd
 import numpy as np
 from pairs_trading.config import KalmanConfig, KALMAN
+from pairs_trading.models.ols_hedge import OLSHedge
 
 
 class KalmanHedge:
     def __init__(self, config: KalmanConfig = KALMAN):
-
-        self._theta = np.zeros(2)
-        self._P = np.eye(2) * 1e4
         self._Q = config.delta * np.eye(2)
-        self._R = config.obs_noise
 
     def _get_Ht(self, x_t: float) -> np.ndarray:
         return np.array([x_t, 1.0])
@@ -63,13 +60,24 @@ class KalmanHedge:
             self.residuals.iloc[i] = resid
         return
 
+    def _get_ols_init(
+        self, target_asset: pd.Series, feature_asset: pd.Series
+    ) -> None:
+        ols = OLSHedge()
+        ols.fit(target_asset, feature_asset)
+        self._theta = np.array([ols.beta, ols.alpha])
+        self._P = np.diag(
+            [ols.model.bse.iloc[1] ** 2, ols.model.bse.iloc[0] ** 2]
+        )
+        self._R = ols.residual_std**2
+        return
+
     def fit(
         self,
         target_asset: pd.Series,
         feature_asset: pd.Series,
     ) -> None:
-        self._theta = np.zeros(2)
-        self._P = np.eye(2) * 1e4
+        self._get_ols_init(target_asset, feature_asset)
         self._run_filter(target_asset, feature_asset)
         return
 
