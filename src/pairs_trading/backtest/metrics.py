@@ -17,7 +17,8 @@ def max_drawdown(pnl: pd.Series) -> float:
 
 def hit_rate(pnl: pd.Series) -> float:
     num_reg = 1e-19
-    return (pnl > 0).sum() / (np.abs(pnl) > num_reg).sum()
+    denom = (np.abs(pnl) > num_reg).sum()
+    return float((pnl > 0).sum() / denom) if denom > 0 else 0.0
 
 
 def average_holding_period(positions: pd.Series) -> float:
@@ -34,7 +35,7 @@ def average_holding_period(positions: pd.Series) -> float:
             l += 1
         else:
             continue
-    return float(np.mean(lens))
+    return float(np.mean(lens)) if lens else 0.0
 
 
 def n_trades(positions: pd.Series) -> int:

@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from pairs_trading.backtest.engine import BacktestEngine
+from pairs_trading.config import SIGNAL
 
 
 def get_synthetic_df_coint(n=500):
@@ -51,3 +52,48 @@ def test_net_gross_same():
         cost=0.0,
     )
     assert result.gross_pnl.sum() == result.pnl.sum()
+
+
+def test_max_holding_no_position_exceeds_limit():
+    df = get_synthetic_df_coint()
+    n = 500
+    test_signals = pd.Series(np.ones(n))
+    test_hedge_ratios = pd.Series(np.ones(n))
+
+    engine = BacktestEngine()
+    result = engine.run(
+        df["y1"],
+        df["y2"],
+        signals=test_signals,
+        hedge_ratios=test_hedge_ratios,
+    )
+    assert np.sum(result.positions > 0) == SIGNAL.max_holding
+
+
+def test_position_sizes_scale_pnl():
+    df = get_synthetic_df_coint()
+    n = 500
+    test_signals = pd.Series(np.ones(n))
+    test_hedge_ratios = pd.Series(np.ones(n))
+    pos1 = pd.Series(np.ones(n))
+    pos2 = 2 * pos1
+
+    engine1 = BacktestEngine()
+    result1 = engine1.run(
+        df["y1"],
+        df["y2"],
+        signals=test_signals,
+        hedge_ratios=test_hedge_ratios,
+        position_sizes=pos1,
+    )
+
+    engine2 = BacktestEngine()
+    result2 = engine2.run(
+        df["y1"],
+        df["y2"],
+        signals=test_signals,
+        hedge_ratios=test_hedge_ratios,
+        position_sizes=pos2,
+    )
+
+    assert np.allclose(result2.gross_pnl, 2 * result1.gross_pnl)

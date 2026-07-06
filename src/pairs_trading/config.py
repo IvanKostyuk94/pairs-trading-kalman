@@ -30,7 +30,7 @@ class CointConfig:
 @dataclass(frozen=True)
 class SignalConfig:
     entry_z: float = 2.0
-    exit_z: float = 0.5
+    exit_z: float = 0.2
     stop_z: float = 3.5
     max_holding: int = 30
 
@@ -42,14 +42,13 @@ class CostConfig:
 
 @dataclass(frozen=True)
 class KalmanConfig:
-    delta: float = 7e-7
+    delta: float = 1e-4
 
 
 @dataclass(frozen=True)
 class GARCHConfig:
     p: int = 1
     q: int = 1
-    target_vol: float = 0.01
 
 
 DATA = DataConfig()
