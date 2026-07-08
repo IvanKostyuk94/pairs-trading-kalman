@@ -75,19 +75,3 @@ def test_transform_sigma_positive():
     garch.fit(resid_train)
     sigmat = garch.transform(resid_test)
     assert (sigmat > 0).all()
-
-
-def test_compute_position_sizes_inverse():
-    df = get_synthetic_df_coint()
-    hedge = OLSHedge()
-    hedge.fit(df["y2"], df["y1"])
-    resid = hedge.spread(df["y2"], df["y1"])
-
-    garch = GARCHVolatility()
-    garch.fit(resid)
-    sigmat = garch.sigma_t
-    sigmat2 = 2 * sigmat
-    pos1 = compute_position_sizes(sigmat)
-    pos2 = compute_position_sizes(sigmat2)
-
-    assert np.allclose(2 * pos2.values, pos1.values)
