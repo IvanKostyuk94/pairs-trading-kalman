@@ -17,7 +17,7 @@ class SplitConfig:
     train_end: str = "2019-12-31"
     val_start: str = "2020-01-01"
     val_end: str = "2022-12-31"
-    test_start: str = "2022-01-01"
+    test_start: str = "2023-01-01"
     test_end: str = "2025-12-31"
 
 
@@ -46,6 +46,11 @@ class KalmanConfig:
 
 
 @dataclass(frozen=True)
+class RollingOLSConfig:
+    window: int = 200
+
+
+@dataclass(frozen=True)
 class GARCHConfig:
     p: int = 1
     q: int = 1
@@ -57,4 +62,5 @@ COINT = CointConfig()
 SIGNAL = SignalConfig()
 COST = CostConfig()
 KALMAN = KalmanConfig()
+ROLLING_OLS = RollingOLSConfig()
 GARCH = GARCHConfig()
