@@ -11,7 +11,7 @@ class DataConfig:
 
 @dataclass(frozen=True)
 class SplitConfig:
-    coint_start: str = "2019-09-01"
+    coint_start: str = "2019-07-01"
     coint_end: str = "2019-12-31"
     train_start: str = "2017-01-01"
     train_end: str = "2019-12-31"
